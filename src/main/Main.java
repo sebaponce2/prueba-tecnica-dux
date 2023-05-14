@@ -40,11 +40,11 @@ public class Main {
             }
         }
 
-        System.out.println("Por favor, ingrese la probabilidad de ganar del primer jugador del 0 al 100.");
+        System.out.println("Por favor, ingrese la probabilidad de ganar del primer jugador del 1 al 100.");
         while (true){
             try {
                 int firstPlayerProbability = input.nextInt();
-                if (firstPlayerProbability >= 0 && firstPlayerProbability <= 100){
+                if (firstPlayerProbability > 0 && firstPlayerProbability <= 100){
                     gameManager.setProbabilityWin(firstPlayer, secondPlayer, firstPlayerProbability);
                     System.out.println("La probabilidad de ganar del primer jugador es de " + firstPlayer.getProbabilityWin() + "% y la del segundo jugador es de " + secondPlayer.getProbabilityWin() + "%");
                 }else{
@@ -52,7 +52,7 @@ public class Main {
                 }
                 break;
             }catch(InputMismatchException e){
-                System.out.println("Por favor, elija la probabilidad entre 0 y 100.");
+                System.out.println("Por favor, elija la probabilidad entre 1 y 100.");
                 input.nextLine();
             }
         }

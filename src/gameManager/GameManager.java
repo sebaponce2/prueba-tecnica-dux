@@ -36,10 +36,10 @@ public class GameManager {
         boolean flag = false;
 
         if (firstPlayer.getProbabilityWin() > secondPlayer.getProbabilityWin() || firstPlayer.getProbabilityWin() == secondPlayer.getProbabilityWin()) {
-            flag = randomNumber >= 0 && randomNumber <= firstPlayer.getProbabilityWin();
+            flag = randomNumber >= 1 && randomNumber <= firstPlayer.getProbabilityWin();
         }else {
             //Lo negamos para que retorne false cuando se cumpla esta condicion, ya que false representa al jugador 2
-            flag = !(randomNumber >= 0 && randomNumber <= secondPlayer.getProbabilityWin());
+            flag = !(randomNumber >= 1 && randomNumber <= secondPlayer.getProbabilityWin());
         }
         return flag;
     }
