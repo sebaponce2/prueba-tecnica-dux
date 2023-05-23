@@ -58,11 +58,6 @@ public class GameManager {
             secondPlayer.setPoints(secondPlayer.getPoints() + 10);
         }
 
-        //Valida qué jugador ganó el punto
-        winner = point ? firstPlayer.getName() : secondPlayer.getName();
-
-        System.out.println("Punto para " + winner + "!");
-
         return point;
     }
 
@@ -142,12 +137,6 @@ public class GameManager {
                 secondPlayerCount++;
             }
 
-            if (firstPlayerCount == 4 || secondPlayerCount == 4) {
-                System.out.println("Ventaja para " + (point ? firstPlayer.getName() : secondPlayer.getName()));
-            }else if((firstPlayerCount == 5 || secondPlayerCount == 5) && !flag){
-                System.out.println("Doble ventaja para "+ (point ? firstPlayer.getName() : secondPlayer.getName()));
-            }
-
             setDeucePoints(firstPlayer, secondPlayer, firstPlayerCount, secondPlayerCount);
 
             if (!flag) {
@@ -215,8 +204,10 @@ public class GameManager {
     }
 
     //Indica si se debe jugar tie break
-    public boolean isTieBreak(Players firstPlayer, Players secondPlayer){
-        return firstPlayer.getGames() == 6 && secondPlayer.getGames() == 6;
+    public void isTieBreak(String player){
+        System.out.println();
+        System.out.println("Tie break!");
+        System.out.println("Turno de saque para " + player);
     }
 
     //Maneja toda la lógica del tie break. Indica quién ganó el game
@@ -258,8 +249,6 @@ public class GameManager {
 
             if (flag) {
                 System.out.println(winnerName+" ganó el game!");
-            }else if (!flag){
-                System.out.println("Punto para "+ (point ? firstPlayer.getName() : secondPlayer.getName())+"!");
             }
         }
         return winnerTieBreak;
@@ -296,12 +285,15 @@ public class GameManager {
         return firstPlayer.getSets() >= topSets || secondPlayer.getSets() >= topSets;
     }
 
+    public String serviceName(Players firstPlayer, Players secondPlayer, boolean service){
+        return service ? firstPlayer.getName() : secondPlayer.getName();
+    }
     //Maneja toda la logica del juego, indica si se juega game normal o tie break,
     //indica quien ganó el set
     public void match(Players firstPlayer, Players secondPlayer){
         int topSets = 0;
-        boolean isTieBreak = false;
         boolean endMatch = false;
+        boolean service = false;
 
         //La diferencia que necesita el jugador para ganar según la cantidad de sets que se van a jugar
         topSets = (qtySets == 5) ? 3 : 2;
@@ -310,23 +302,22 @@ public class GameManager {
         // Va a correr mientras no haya ganado ninguno de los dos
         while(!endMatch) {
             boolean flag = false;
-            boolean service = false;
             String player = "";
             String winner = "";
 
             //Sigue corriendo mientras ninguno haya llegado al top de sets
             while (!flag) {
-                player = service ? firstPlayer.getName() : secondPlayer.getName();
+                player = serviceName(firstPlayer,secondPlayer, service);
 
                 // Logica que indica quién saca en caso de que todavía no haya ganado ninguno el partido o no haya tie break
-                if (!isTieBreak && !endMatch) {
+                if (!endMatch) {
                     System.out.println();
-                    System.out.println("Comienzo del game. Saca " + player);
+                    System.out.println("Turno de saque para " + player);
                 }
                 flag = true;
 
                 games(firstPlayer, secondPlayer);
-                service = !service;
+
 
                 int differenceP1 = firstPlayer.getGames() - secondPlayer.getGames();
                 int differenceP2 = secondPlayer.getGames() - firstPlayer.getGames();
@@ -338,16 +329,14 @@ public class GameManager {
                     secondPlayer.setSets(secondPlayer.getSets() + 1);
                     winner = secondPlayer.getName();
                 }else if (firstPlayer.getGames() == 6 && secondPlayer.getGames() == 6) {
-                    System.out.println();
-                    System.out.println("Tie beak!");
-                    System.out.println("Saca " + player);
+                    service = !service;
+                    player = serviceName(firstPlayer,secondPlayer, service);
+                    isTieBreak(player);
                     winner = tieBreak(firstPlayer, secondPlayer) ? firstPlayer.getName() : secondPlayer.getName();
                 }else{
                     flag = false;
                 }
-
-                isTieBreak = isTieBreak(firstPlayer, secondPlayer);
-
+                service = !service;
                 // Si uno de los dos llega a la cantidad de sets, endGame = true (termina el juego)
                 endMatch = endGame(firstPlayer, secondPlayer, topSets);
 
